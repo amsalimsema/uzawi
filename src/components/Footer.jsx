@@ -1,4 +1,4 @@
-'use client';
+
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -131,14 +131,7 @@ export default function Footer() {
                     Our Work
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/"
-                    className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
-                  >
-                    Work with us
-                  </Link>
-                </li>
+                
                 <li>
                   <Link
                     to="/contact"

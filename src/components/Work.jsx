@@ -1,14 +1,8 @@
-'use client';
+"use client"
 
-import { motion } from 'framer-motion';
-import {
-  FaBrain,
-  FaBalanceScale,
-  FaHandPeace,
-  FaNetworkWired,
-  FaNewspaper,
-} from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { motion } from "framer-motion"
+import { FaBrain, FaBalanceScale, FaHandPeace, FaNetworkWired } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 export default function Work() {
   return (
@@ -52,8 +46,7 @@ export default function Work() {
               <span className="text-[#00CAFF]"> Action</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto leading-relaxed text-pretty mb-1">
-              Exploring the future of democratic governance on the African
-              continent in the age of AI
+              Exploring the future of democratic governance on the African continent in the age of AI
             </p>
           </motion.div>
         </div>
@@ -76,17 +69,8 @@ export default function Work() {
         <div className="absolute inset-0 opacity-[0.03]">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern
-                id="diagonalWork"
-                width="40"
-                height="40"
-                patternUnits="userSpaceOnUse"
-              >
-                <path
-                  d="M 0 0 L 40 40 M 40 0 L 0 40"
-                  stroke="#0F1662"
-                  strokeWidth="0.5"
-                />
+              <pattern id="diagonalWork" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 0 0 L 40 40 M 40 0 L 0 40" stroke="#0F1662" strokeWidth="0.5" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#diagonalWork)" />
@@ -118,11 +102,9 @@ export default function Work() {
                   </h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  We aim to safeguard civic freedoms by monitoring, researching
-                  and challenging the unlawful use of AI powered surveillance
-                  technologies across Africa. Our goal is to ensure that AI
-                  technologies strengthen rather than restrict democratic
-                  participation.
+                  We aim to safeguard civic freedoms by monitoring, researching and challenging the unlawful use of AI
+                  powered surveillance technologies across Africa. Our goal is to ensure that AI technologies strengthen
+                  rather than restrict democratic participation.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1 bg-[#4065FF]/10 text-[#4065FF] rounded-full text-sm font-medium">
@@ -157,11 +139,9 @@ export default function Work() {
                   <FaBalanceScale className="w-10 h-10 text-[#00CAFF]" />
                 </div>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  We research and advocate for transparent and accountable
-                  social media platforms in Africa. By raising awareness and
-                  influencing policy, we aim to combat mis/disinformation and
-                  harmful online practices that undermine trust, public
-                  engagement and civic freedoms.
+                  We research and advocate for transparent and accountable social media platforms in Africa. By raising
+                  awareness and influencing policy, we aim to combat mis/disinformation and harmful online practices
+                  that undermine trust, public engagement and civic freedoms.
                 </p>
                 <div className="flex flex-wrap gap-2 md:justify-end">
                   <span className="px-3 py-1 bg-[#00CAFF]/10 text-[#00CAFF] rounded-full text-sm font-medium">
@@ -196,11 +176,9 @@ export default function Work() {
                   </h3>
                 </div>
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  We monitor and address unfair practices within the AI industry
-                  -including the exploitation of African labour, personal data
-                  and raw materials. Our work advocates for fairness,
-                  accountability and protection of human rights throughout the
-                  AI lifecycle.
+                  We monitor and address unfair practices within the AI industry -including the exploitation of African
+                  labour, personal data and raw materials. Our work advocates for fairness, accountability and
+                  protection of human rights throughout the AI lifecycle.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1 bg-[#4065FF]/10 text-[#4065FF] rounded-full text-sm font-medium">
@@ -238,10 +216,8 @@ export default function Work() {
                   <FaNetworkWired className="w-10 h-10 text-[#00CAFF]" />
                 </div>
                 <p className="text-gray-700 leading-relaxed">
-                  We research and raise awareness on the growing influence of
-                  Big Tech companies on African governance systems. Our work
-                  aims to protect democracy, rule of law and human rights in the
-                  age of AI.
+                  We research and raise awareness on the growing influence of Big Tech companies on African governance
+                  systems. Our work aims to protect democracy, rule of law and human rights in the age of AI.
                 </p>
                 <div className="flex flex-wrap gap-2 md:justify-end">
                   <span className="px-3 py-1 bg-[#00CAFF]/10 text-[#00CAFF] rounded-full text-sm font-medium">
@@ -253,6 +229,38 @@ export default function Work() {
                   <span className="px-3 py-1 bg-[#00CAFF]/10 text-[#00CAFF] rounded-full text-sm font-medium">
                     State sovereignty
                   </span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Activities section */}
+            <motion.div
+              className="mt-16 bg-white border-2 border-[#4065FF]/20 p-10 md:p-12 rounded-2xl shadow-lg"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+            >
+              <div className="max-w-3xl mx-auto text-center">
+                <h2 className="text-3xl md:text-4xl font-serif text-[#0F1662] mb-6">Activities</h2>
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">We do our work through:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                  <div className="flex items-center gap-3 p-4 bg-[#4065FF]/5 rounded-lg">
+                    <div className="w-2 h-2 bg-[#4065FF] rounded-full flex-shrink-0" />
+                    <span className="text-gray-800 font-medium">Policy Advocacy</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-[#00CAFF]/5 rounded-lg">
+                    <div className="w-2 h-2 bg-[#00CAFF] rounded-full flex-shrink-0" />
+                    <span className="text-gray-800 font-medium">Citizen Sensitization</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-[#4065FF]/5 rounded-lg">
+                    <div className="w-2 h-2 bg-[#4065FF] rounded-full flex-shrink-0" />
+                    <span className="text-gray-800 font-medium">Capacity Building</span>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-[#00CAFF]/5 rounded-lg">
+                    <div className="w-2 h-2 bg-[#00CAFF] rounded-full flex-shrink-0" />
+                    <span className="text-gray-800 font-medium">Research</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -269,10 +277,9 @@ export default function Work() {
             <div className="max-w-3xl mx-auto text-center">
               <div className="w-16 h-1 bg-[#00CAFF] mx-auto mb-6" />
               <p className="text-white/90 leading-relaxed text-lg md:text-xl mb-8 text-balance">
-                Through evidence-based research we examine the impact of AI
-                technologies on the African continent and ensure that
-                technological advancement in Africa serves the interests of the
-                African people and supports democratic governance.
+                Through evidence-based research we examine the impact of AI technologies on the African continent and
+                ensure that technological advancement in Africa serves the interests of the African people and supports
+                democratic governance.
               </p>
               <Link
                 to="/publications"
@@ -291,7 +298,7 @@ export default function Work() {
         </div>
       </section>
     </>
-  );
+  )
 }
 
-export { Work };
+export { Work }
