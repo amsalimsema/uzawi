@@ -285,19 +285,20 @@ export default function Navbar() {
                 >
                   <div className="text-[#0F1662] text-sm font-medium mb-2">Get Involved</div>
                   <div className="pl-4 space-y-2">
-                    <Link
-                      to="/workwithus"
-                      onClick={handleMobileLinkClick}
-                      className="block text-[#0F1662] hover:text-gray-900 text-sm transition-colors"
-                    >
-                      Work with us
-                    </Link>
+                    
                     <Link
                       to="/donate"
                       onClick={handleMobileLinkClick}
                       className="block text-[#0F1662] hover:text-gray-900 text-sm transition-colors"
                     >
                       Donate
+                    </Link>
+                    <Link
+                      to="/workwithus"
+                      onClick={handleMobileLinkClick}
+                      className="block text-[#0F1662] hover:text-gray-900 text-sm transition-colors"
+                    >
+                      Work with us
                     </Link>
                   </div>
                 </motion.div>
