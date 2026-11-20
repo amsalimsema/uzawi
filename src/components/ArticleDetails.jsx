@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { FaCalendar, FaUser, FaArrowLeft } from 'react-icons/fa';
-import { Link, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { fetchBlogPostBySlug } from './Contentful';
-import emailjs from '@emailjs/browser';
+import { motion } from "framer-motion";
+import { FaCalendar, FaUser, FaArrowLeft } from "react-icons/fa";
+import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { fetchBlogPostBySlug } from "./Contentful";
+import RichTextRenderer from "./RichTextRenderer";
+import emailjs from "@emailjs/browser";
 
 // Helper function to convert slug back to title
 function slugToTitle(slug) {
   return slug
-    .split('-')
+    .split("-")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 export function ArticleDetails() {
@@ -20,56 +21,56 @@ export function ArticleDetails() {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const openNewsletterModal = () => {
     setIsNewsletterModalOpen(true);
     // Prevent body scrolling when modal is open
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const closeNewsletterModal = () => {
     setIsNewsletterModalOpen(false);
-    setEmail(''); // Reset email input
+    setEmail(""); // Reset email input
     // Re-enable body scrolling when modal is closed
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const validateEmail = (email) => {
     // Check if email is empty
     if (!email.trim()) {
-      return 'Email address is required';
+      return "Email address is required";
     }
 
     // Check email format with regex
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      return 'Please enter a valid email address';
+      return "Please enter a valid email address";
     }
 
     // Check for common typos
     const commonDomains = [
-      'gmail.com',
-      'yahoo.com',
-      'outlook.com',
-      'hotmail.com',
+      "gmail.com",
+      "yahoo.com",
+      "outlook.com",
+      "hotmail.com",
     ];
-    const domain = email.split('@')[1]?.toLowerCase();
-    if (domain && !domain.includes('.')) {
-      return 'Email domain appears to be invalid';
+    const domain = email.split("@")[1]?.toLowerCase();
+    if (domain && !domain.includes(".")) {
+      return "Email domain appears to be invalid";
     }
 
-    return '';
+    return "";
   };
 
   const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
 
     // Clear previous errors and success messages
-    setEmailError('');
+    setEmailError("");
     setSubmitSuccess(false);
 
     // Validate email with custom validation
@@ -89,15 +90,15 @@ export function ArticleDetails() {
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           to_email: email,
-          from_name: 'Newsletter Subscription',
+          from_name: "Newsletter Subscription",
           reply_to: email,
         },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       );
 
       if (result.status === 200) {
         setSubmitSuccess(true);
-        setEmail('');
+        setEmail("");
 
         // Close modal after 2 seconds
         setTimeout(() => {
@@ -106,8 +107,8 @@ export function ArticleDetails() {
         }, 2000);
       }
     } catch (error) {
-      console.error('EmailJS Error:', error);
-      setEmailError('Failed to subscribe. Please try again later.');
+      console.error("EmailJS Error:", error);
+      setEmailError("Failed to subscribe. Please try again later.");
     } finally {
       setIsSubmitting(false);
     }
@@ -150,20 +151,22 @@ export function ArticleDetails() {
   return (
     <>
       <div className="min-h-screen bg-white">
-        {/* Hero Image */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="w-full h-[50vh] relative overflow-hidden"
-        >
-          <img
-            src={article.image || '/placeholder.svg'}
-            alt={article.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        </motion.div>
+        {/* Hero Image (only shown when the post has one) */}
+        {article.image && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="w-full h-[50vh] relative overflow-hidden"
+          >
+            <img
+              src={article.image}
+              alt={article.imageAlt}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          </motion.div>
+        )}
 
         {/* Article Content */}
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -192,55 +195,41 @@ export function ArticleDetails() {
               {article.title}
             </h1>
 
-            {/* Article Meta */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8 pb-8 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <FaUser className="text-[#00CAFF]" />
-                <span>{article.author}</span>
+            {/* Excerpt as an intro line under the title */}
+            {article.excerpt && (
+              <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                {article.excerpt}
+              </p>
+            )}
+
+            {/* Article Meta (only shown when author or date exist) */}
+            {(article.author || article.date) && (
+              <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 mb-8 pb-8 border-b border-gray-200">
+                {article.author && (
+                  <div className="flex items-center gap-2">
+                    <FaUser className="text-[#00CAFF]" />
+                    <span>{article.author}</span>
+                  </div>
+                )}
+                {article.date && (
+                  <div className="flex items-center gap-2">
+                    <FaCalendar className="text-[#00CAFF]" />
+                    <span>{article.date}</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2">
-                <FaCalendar className="text-[#00CAFF]" />
-                <span>{article.date}</span>
-              </div>
-            </div>
+            )}
           </motion.div>
 
-          {/* Article Body */}
+          {/* Article Body: headings, subheadings, paragraphs and links
+              all come from the Contentful Rich Text field */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
             className="prose prose-lg max-w-none"
           >
-            {article.content && article.content.length > 0 ? (
-              article.content.map((block, index) => {
-                if (block.type === 'heading') {
-                  return (
-                    <h2
-                      key={index}
-                      className="text-2xl font-serif text-gray-900 mt-8 mb-4"
-                    >
-                      {block.text}
-                    </h2>
-                  );
-                }
-                if (block.type === 'paragraph') {
-                  return (
-                    <p
-                      key={index}
-                      className="text-gray-700 leading-relaxed mb-6"
-                    >
-                      {block.text}
-                    </p>
-                  );
-                }
-                return null;
-              })
-            ) : (
-              <p className="text-gray-700 leading-relaxed mb-6">
-                Content is being loaded...
-              </p>
-            )}
+            <RichTextRenderer document={article.body} />
           </motion.div>
 
           {/* Related Articles / Call to Action */}
@@ -284,7 +273,7 @@ export function ArticleDetails() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed inset-0 z-[70] flex items-center justify-center p-4"
           >
             {/* Modal card */}
@@ -340,16 +329,16 @@ export function ArticleDetails() {
                     onChange={(e) => {
                       setEmail(e.target.value);
                       // Clear error when user starts typing
-                      if (emailError) setEmailError('');
+                      if (emailError) setEmailError("");
                     }}
                     disabled={isSubmitting || submitSuccess}
                     placeholder="your.email@example.com"
                     className={`w-full px-4 py-3 border rounded-sm focus:ring-2 focus:ring-[#00CAFF] focus:border-transparent outline-none transition-all ${
-                      emailError ? 'border-red-500' : 'border-gray-300'
+                      emailError ? "border-red-500" : "border-gray-300"
                     } ${
                       isSubmitting || submitSuccess
-                        ? 'bg-gray-100 cursor-not-allowed'
-                        : ''
+                        ? "bg-gray-100 cursor-not-allowed"
+                        : ""
                     }`}
                   />
                   {emailError && (
@@ -367,15 +356,15 @@ export function ArticleDetails() {
                   disabled={isSubmitting || submitSuccess}
                   className={`w-full py-3 rounded-sm transition-colors ${
                     isSubmitting || submitSuccess
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-[#0F1662] hover:bg-gray-800'
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#0F1662] hover:bg-gray-800"
                   } text-white`}
                 >
                   {isSubmitting
-                    ? 'Subscribing...'
+                    ? "Subscribing..."
                     : submitSuccess
-                    ? 'Subscribed!'
-                    : 'Subscribe'}
+                      ? "Subscribed!"
+                      : "Subscribe"}
                 </button>
               </form>
             </div>

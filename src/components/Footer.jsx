@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaXTwitter, FaLinkedin, FaGithub } from 'react-icons/fa6';
+import { FaXTwitter, FaLinkedin, FaBluesky, FaYoutube} from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import LOGO from '../assets/logo.png';
@@ -210,7 +210,15 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
                 >
-                  <FaGithub className="w-5 h-5" />
+                  <FaBluesky className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://github.com/uzawi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
+                >
+                  <FaYoutube className="w-5 h-5" />
                 </a>
               </div>
             </motion.div>

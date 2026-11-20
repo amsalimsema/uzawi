@@ -67,6 +67,50 @@ export async function fetchResearchCategories() {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Blog helpers
+// Every blog field is optional in Contentful, so each one gets a safe fallback.
+// ---------------------------------------------------------------------------
+
+// Contentful asset URLs come without a protocol
+const assetUrl = (asset) => {
+  const url = asset?.fields?.file?.url;
+  if (!url) return null;
+  return url.startsWith('//') ? `https:${url}` : url;
+};
+
+// Returns '' when there is no date, and the original value if it isn't a valid date
+const formatDate = (value) => {
+  if (!value) return '';
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return String(value);
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+// Turns a Contentful blogPost entry into the shape the Blog and ArticleDetails pages use
+function mapBlogPost(item) {
+  const f = item.fields || {};
+  return {
+    id: item.sys.id,
+    // No slug? Fall back to the entry ID so the post is still reachable
+    slug: f.slug || item.sys.id,
+    title: f.title || 'Untitled post',
+    excerpt: f.excerpt || '',
+    author: f.author || '',
+    date: formatDate(f.date),
+    category: f.category || '',
+    featured: f.featured || false,
+    image: assetUrl(f.image),
+    imageAlt: f.imageAlt || f.title || '',
+    // Raw Rich Text document, rendered by RichTextRenderer
+    body: f.body && f.body.nodeType === 'document' ? f.body : null,
+  };
+}
+
 // Fetch all blog posts from Contentful
 // Returns an array of blog posts with all fields needed for the blog listing
 export async function fetchBlogPosts() {
@@ -78,19 +122,7 @@ export async function fetchBlogPosts() {
       order: '-sys.createdAt',
     });
 
-    return entries.items.map((item) => ({
-      id: item.sys.id,
-      title: item.fields.title,
-      excerpt: item.fields.excerpt,
-      author: item.fields.author,
-      date: item.fields.date,
-      category: item.fields.category,
-      featured: item.fields.featured || false,
-      image: item.fields.image?.fields?.file?.url
-        ? `https:${item.fields.image.fields.file.url}`
-        : null,
-      slug: item.fields.slug, // Use slug field directly from Contentful
-    }));
+    return entries.items.map(mapBlogPost);
   } catch (error) {
     console.error('Error fetching blog posts from Contentful:', error);
     return [];
@@ -98,66 +130,28 @@ export async function fetchBlogPosts() {
 }
 
 // Fetch a single blog post by its slug
-// The slug is generated from the blog post title
-// Returns the full blog post with content for the article details page
+// Returns the full blog post (including the rich text body) for the article details page
 export async function fetchBlogPostBySlug(slug) {
   const client = getContentfulClient();
 
   try {
-    // Query Contentful for the blog post with matching slug
+    // include: 3 resolves linked assets (e.g. images embedded in the body)
     const entries = await client.getEntries({
       content_type: 'blogPost',
       'fields.slug': slug, // Query by slug field directly
       limit: 1,
+      include: 3,
     });
 
-    if (entries.items.length === 0) {
-      return null;
+    if (entries.items.length > 0) {
+      return mapBlogPost(entries.items[0]);
     }
 
-    const entry = entries.items[0];
-
-    // Parse Rich Text content from Contentful
-    let content = [];
-    if (entry.fields.body && entry.fields.body.nodeType === 'document') {
-      // Process Rich Text document content
-      content = entry.fields.body.content
-        .map((node) => {
-          // Handle different node types
-          if (
-            node.nodeType === 'heading-1' ||
-            node.nodeType === 'heading-2' ||
-            node.nodeType === 'heading-3'
-          ) {
-            const text = node.content?.map((c) => c.value).join('') || '';
-            return text ? { type: 'heading', text } : null;
-          }
-          if (node.nodeType === 'paragraph') {
-            const text = node.content?.map((c) => c.value).join('') || '';
-            return text ? { type: 'paragraph', text } : null;
-          }
-          return null;
-        })
-        .filter(Boolean);
-    }
-
-    return {
-      id: entry.sys.id,
-      title: entry.fields.title,
-      excerpt: entry.fields.excerpt,
-      author: entry.fields.author,
-      date: new Date(entry.fields.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      category: entry.fields.category,
-      featured: entry.fields.featured || false,
-      image: entry.fields.image?.fields?.file?.url
-        ? `https:${entry.fields.image.fields.file.url}`
-        : null,
-      content: content,
-    };
+    // Posts without a slug use their entry ID in the URL
+    const entry = await client.getEntry(slug, { include: 3 });
+    return entry?.sys?.contentType?.sys?.id === 'blogPost'
+      ? mapBlogPost(entry)
+      : null;
   } catch (error) {
     console.error('Error fetching blog post by slug from Contentful:', error);
     return null;

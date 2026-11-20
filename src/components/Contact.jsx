@@ -5,11 +5,10 @@ import {
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
-  FaLinkedin,
   FaGithub,
   FaBullseye,
 } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaXTwitter, FaLinkedin, FaBluesky, FaYoutube} from 'react-icons/fa6';
 import { useState } from 'react';
 
 export default function Contact() {
@@ -191,28 +190,33 @@ export default function Contact() {
                   href="https://twitter.com/uzawi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#00CAFF] hover:text-[#0F1662] transition-colors"
-                  aria-label="X (formerly Twitter)"
+                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
                 >
-                  <FaXTwitter className="text-2xl" />
+                  <FaXTwitter className="w-5 h-5" />
                 </a>
                 <a
                   href="https://linkedin.com/company/uzawi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#00CAFF] hover:text-[#0F1662] transition-colors"
-                  aria-label="LinkedIn"
+                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
                 >
-                  <FaLinkedin className="text-2xl" />
+                  <FaLinkedin className="w-5 h-5" />
                 </a>
                 <a
                   href="https://github.com/uzawi"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#00CAFF] hover:text-[#0F1662] transition-colors"
-                  aria-label="GitHub"
+                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
                 >
-                  <FaGithub className="text-2xl" />
+                  <FaBluesky className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://github.com/uzawi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
+                >
+                  <FaYoutube className="w-5 h-5" />
                 </a>
               </div>
             </div>

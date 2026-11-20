@@ -73,14 +73,11 @@ export async function fetchBlogPosts() {
   const client = getContentfulClient();
 
   try {
-    // Query Contentful for all entries of type "blogPost"
-    // Ordered by creation date (newest first)
     const entries = await client.getEntries({
       content_type: 'blogPost',
       order: '-sys.createdAt',
     });
 
-    // Transform Contentful entries into a simpler format
     return entries.items.map((item) => ({
       id: item.sys.id,
       title: item.fields.title,
@@ -92,11 +89,7 @@ export async function fetchBlogPosts() {
       image: item.fields.image?.fields?.file?.url
         ? `https:${item.fields.image.fields.file.url}`
         : null,
-      // Create a URL-friendly slug from the title for routing
-      slug: item.fields.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, ''),
+      slug: item.fields.slug, // Use slug field directly from Contentful
     }));
   } catch (error) {
     console.error('Error fetching blog posts from Contentful:', error);
@@ -111,57 +104,59 @@ export async function fetchBlogPostBySlug(slug) {
   const client = getContentfulClient();
 
   try {
-    // Query Contentful for blog posts
+    // Query Contentful for the blog post with matching slug
     const entries = await client.getEntries({
       content_type: 'blogPost',
-      order: '-sys.createdAt',
+      'fields.slug': slug, // Query by slug field directly
+      limit: 1,
     });
 
-    // Find the blog post that matches the slug
-    const matchedEntry = entries.items.find((item) => {
-      // Generate slug from the title to match against the URL slug
-      const itemSlug = item.fields.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-      return itemSlug === slug;
-    });
-
-    // Return null if no matching post found
-    if (!matchedEntry) {
+    if (entries.items.length === 0) {
       return null;
     }
 
-    // Transform the matched entry into the format expected by ArticleDetails
+    const entry = entries.items[0];
+
+    // Parse Rich Text content from Contentful
+    let content = [];
+    if (entry.fields.body && entry.fields.body.nodeType === 'document') {
+      // Process Rich Text document content
+      content = entry.fields.body.content
+        .map((node) => {
+          // Handle different node types
+          if (
+            node.nodeType === 'heading-1' ||
+            node.nodeType === 'heading-2' ||
+            node.nodeType === 'heading-3'
+          ) {
+            const text = node.content?.map((c) => c.value).join('') || '';
+            return text ? { type: 'heading', text } : null;
+          }
+          if (node.nodeType === 'paragraph') {
+            const text = node.content?.map((c) => c.value).join('') || '';
+            return text ? { type: 'paragraph', text } : null;
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+
     return {
-      id: matchedEntry.sys.id,
-      title: matchedEntry.fields.title,
-      excerpt: matchedEntry.fields.excerpt,
-      author: matchedEntry.fields.author,
-      // Format the date as a readable string
-      date: new Date(matchedEntry.fields.date).toLocaleDateString('en-US', {
+      id: entry.sys.id,
+      title: entry.fields.title,
+      excerpt: entry.fields.excerpt,
+      author: entry.fields.author,
+      date: new Date(entry.fields.date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
       }),
-      category: matchedEntry.fields.category,
-      featured: matchedEntry.fields.featured || false,
-      image: matchedEntry.fields.image?.fields?.file?.url
-        ? `https:${matchedEntry.fields.image.fields.file.url}`
+      category: entry.fields.category,
+      featured: entry.fields.featured || false,
+      image: entry.fields.image?.fields?.file?.url
+        ? `https:${entry.fields.image.fields.file.url}`
         : null,
-      // Content is stored as an array of content blocks in Contentful
-      // Each block has a type (heading, paragraph) and text
-      content: matchedEntry.fields.content || [],
-      // Calculate estimated read time based on content length
-      // Assumes average reading speed of 200 words per minute
-      readTime: matchedEntry.fields.content
-        ? `${Math.ceil(
-            matchedEntry.fields.content.reduce(
-              (total, block) => total + block.text.split(' ').length,
-              0
-            ) / 200
-          )} min read`
-        : '5 min read',
+      content: content,
     };
   } catch (error) {
     console.error('Error fetching blog post by slug from Contentful:', error);

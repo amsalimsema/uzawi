@@ -1,12 +1,10 @@
-'use client';
-
-import { motion } from 'framer-motion';
-import { FaCalendar, FaTag } from 'react-icons/fa';
-import { FiArrowUpRight } from 'react-icons/fi';
-import { HiUserCircle } from 'react-icons/hi2';
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { fetchBlogPosts } from './Contentful';
+import { motion } from "framer-motion";
+import { FaCalendar, FaTag } from "react-icons/fa";
+import { FiArrowUpRight } from "react-icons/fi";
+import { HiUserCircle } from "react-icons/hi2";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { fetchBlogPosts } from "./Contentful";
 
 export default function Blog() {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -65,8 +63,8 @@ export default function Blog() {
                 {/* Image Section */}
                 <div className="relative h-64 md:h-full overflow-hidden -m-[1px]">
                   <img
-                    src={featuredPost.image || '/placeholder.svg'}
-                    alt={featuredPost.title}
+                    src={featuredPost.image || "/placeholder.svg"}
+                    alt={featuredPost.imageAlt}
                     className="w-full h-full object-cover  group-hover:scale-100 transition-transform duration-500"
                   />
                   <div className="absolute top-4 left-4 z-10">
@@ -78,32 +76,42 @@ export default function Blog() {
 
                 {/* Content Section */}
                 <div className="p-8 md:p-12 flex flex-col justify-center">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="flex items-center gap-2 text-[#4065FF] text-sm">
-                      <FaTag className="w-3 h-3" />
-                      {featuredPost.category}
-                    </span>
-                  </div>
+                  {featuredPost.category && (
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex items-center gap-2 text-[#4065FF] text-sm">
+                        <FaTag className="w-3 h-3" />
+                        {featuredPost.category}
+                      </span>
+                    </div>
+                  )}
 
                   <h2 className="text-3xl md:text-4xl font-serif text-[#0F1662] mb-4 group-hover:text-[#4065FF] transition-colors">
                     {featuredPost.title}
                   </h2>
 
-                  <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                    {featuredPost.excerpt}
-                  </p>
+                  {featuredPost.excerpt && (
+                    <p className="text-gray-600 text-lg mb-6 leading-relaxed">
+                      {featuredPost.excerpt}
+                    </p>
+                  )}
 
                   {/* Meta Information */}
-                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
-                    <div className="flex items-center gap-2">
-                      <HiUserCircle className="w-5 h-5 text-[#4065FF]" />
-                      <span>{featuredPost.author}</span>
+                  {(featuredPost.author || featuredPost.date) && (
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
+                      {featuredPost.author && (
+                        <div className="flex items-center gap-2">
+                          <HiUserCircle className="w-5 h-5 text-[#4065FF]" />
+                          <span>{featuredPost.author}</span>
+                        </div>
+                      )}
+                      {featuredPost.date && (
+                        <div className="flex items-center gap-2">
+                          <FaCalendar className="w-4 h-4 text-[#4065FF]" />
+                          <span>{featuredPost.date}</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <FaCalendar className="w-4 h-4 text-[#4065FF]" />
-                      <span>{featuredPost.date}</span>
-                    </div>
-                  </div>
+                  )}
 
                   <span className="flex items-center gap-2 text-[#4065FF] group-hover:text-[#00CAFF] transition-colors group-hover:gap-3 duration-300">
                     <span>Read Article</span>
@@ -131,15 +139,17 @@ export default function Blog() {
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={post.image || '/placeholder.svg'}
-                    alt={post.title}
+                    src={post.image || "/placeholder.svg"}
+                    alt={post.imageAlt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-white/90 backdrop-blur-sm text-[#4065FF] px-3 py-1 text-xs rounded-md">
-                      {post.category}
-                    </span>
-                  </div>
+                  {post.category && (
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-white/90 backdrop-blur-sm text-[#4065FF] px-3 py-1 text-xs rounded-md">
+                        {post.category}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
@@ -148,22 +158,30 @@ export default function Blog() {
                     {post.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
-                    {post.excerpt}
-                  </p>
+                  {post.excerpt && (
+                    <p className="text-gray-600 text-sm mb-4 leading-relaxed line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                  )}
 
                   {/* Meta Information */}
                   <div className="mt-auto pt-4 border-t border-gray-200">
-                    <div className="flex items-center justify-between gap-4 mb-3">
-                      <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <HiUserCircle className="w-5 h-5 text-[#4065FF]" />
-                        <span>{post.author}</span>
+                    {(post.author || post.date) && (
+                      <div className="flex items-center justify-between gap-4 mb-3">
+                        {post.author && (
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <HiUserCircle className="w-5 h-5 text-[#4065FF]" />
+                            <span>{post.author}</span>
+                          </div>
+                        )}
+                        {post.date && (
+                          <div className="flex items-center gap-2 text-sm text-gray-700">
+                            <FaCalendar className="w-4 h-4 text-[#4065FF]" />
+                            <span>{post.date}</span>
+                          </div>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-700">
-                        <FaCalendar className="w-4 h-4 text-[#4065FF]" />
-                        <span>{post.date}</span>
-                      </div>
-                    </div>
+                    )}
 
                     <span className="flex items-center gap-2 text-[#4065FF] group-hover:text-[#00CAFF] text-sm transition-colors group-hover:gap-3 duration-300">
                       <span>Read More</span>
@@ -188,7 +206,7 @@ export default function Blog() {
               onClick={handleTogglePosts}
               className="rounded-md px-8 py-4 border-2 border-[#4065FF] text-[#4065FF] hover:bg-[#4065FF] hover:text-white transition-all duration-300"
             >
-              {hasMorePosts ? 'Load More Articles' : 'Show Less'}
+              {hasMorePosts ? "Load More Articles" : "Show Less"}
             </button>
           </motion.div>
         )}
