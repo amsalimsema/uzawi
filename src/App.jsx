@@ -1,23 +1,26 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
   Outlet,
   useLocation,
-} from 'react-router-dom';
-import Navbar from './components/Navbar.jsx';
-import Footer from './components/Footer.jsx';
-import Home from './pages/Home';
-import { ResearchLibrary } from './components/FullLib.jsx';
+} from "react-router-dom";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 
-import About from './components/About.jsx';
-import Work from './components/Work.jsx';
-import Blog from './components/Blog.jsx';
-import ArticleDetails from './components/ArticleDetails.jsx';
-import Contact from './components/Contact.jsx';
-import NotFound from './components/NotFound.jsx';
+const Home = lazy(() => import("./pages/Home"));
+const ResearchLibrary = lazy(() =>
+  import("./components/FullLib.jsx").then((m) => ({
+    default: m.ResearchLibrary,
+  })),
+);
+const About = lazy(() => import("./components/About.jsx"));
+const Work = lazy(() => import("./components/Work.jsx"));
+const Blog = lazy(() => import("./components/Blog.jsx"));
+const ArticleDetails = lazy(() => import("./components/ArticleDetails.jsx"));
+const Contact = lazy(() => import("./components/Contact.jsx"));
+const NotFound = lazy(() => import("./components/NotFound.jsx"));
 
-// ScrollToTop Component
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -33,7 +36,9 @@ function Layout() {
     <>
       <Navbar />
       <ScrollToTop />
-      <Outlet />
+      <Suspense fallback={<div className="min-h-screen" />}>
+        <Outlet />
+      </Suspense>
       <Footer />
     </>
   );
@@ -41,40 +46,68 @@ function Layout() {
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Layout />,
     children: [
       {
         index: true,
-        element: <Home />,
+        lazy: async () => {
+          const { default: Component } = await import("./pages/Home");
+          return { Component };
+        },
       },
       {
-        path: 'publications',
-        element: <ResearchLibrary />,
+        path: "publications",
+        lazy: async () => {
+          const { ResearchLibrary: Component } =
+            await import("./components/FullLib.jsx");
+          return { Component };
+        },
       },
       {
-        path: 'about',
-        element: <About />,
+        path: "about",
+        lazy: async () => {
+          const { default: Component } = await import("./components/About.jsx");
+          return { Component };
+        },
       },
       {
-        path: 'work',
-        element: <Work />,
+        path: "work",
+        lazy: async () => {
+          const { default: Component } = await import("./components/Work.jsx");
+          return { Component };
+        },
       },
       {
-        path: 'blog',
-        element: <Blog />,
+        path: "blog",
+        lazy: async () => {
+          const { default: Component } = await import("./components/Blog.jsx");
+          return { Component };
+        },
       },
       {
-        path: 'blog/:slug',
-        element: <ArticleDetails />,
+        path: "blog/:slug",
+        lazy: async () => {
+          const { default: Component } =
+            await import("./components/ArticleDetails.jsx");
+          return { Component };
+        },
       },
       {
-        path: 'contact',
-        element: <Contact />,
+        path: "contact",
+        lazy: async () => {
+          const { default: Component } =
+            await import("./components/Contact.jsx");
+          return { Component };
+        },
       },
       {
-        path: '*',
-        element: <NotFound />,
+        path: "*",
+        lazy: async () => {
+          const { default: Component } =
+            await import("./components/NotFound.jsx");
+          return { Component };
+        },
       },
     ],
   },
