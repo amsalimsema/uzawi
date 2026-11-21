@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from "react";
+import { useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -7,19 +7,6 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
-
-const Home = lazy(() => import("./pages/Home"));
-const ResearchLibrary = lazy(() =>
-  import("./components/FullLib.jsx").then((m) => ({
-    default: m.ResearchLibrary,
-  })),
-);
-const About = lazy(() => import("./components/About.jsx"));
-const Work = lazy(() => import("./components/Work.jsx"));
-const Blog = lazy(() => import("./components/Blog.jsx"));
-const ArticleDetails = lazy(() => import("./components/ArticleDetails.jsx"));
-const Contact = lazy(() => import("./components/Contact.jsx"));
-const NotFound = lazy(() => import("./components/NotFound.jsx"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -36,78 +23,72 @@ function Layout() {
     <>
       <Navbar />
       <ScrollToTop />
-      <Suspense fallback={<div className="min-h-screen" />}>
-        <Outlet />
-      </Suspense>
+      <Outlet />
       <Footer />
     </>
   );
 }
 
+// Each route's page is downloaded only when that route is visited
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    HydrateFallback: () => <div className="min-h-screen" />,
     children: [
       {
         index: true,
-        lazy: async () => {
-          const { default: Component } = await import("./pages/Home");
-          return { Component };
-        },
+        lazy: () =>
+          import("./pages/Home").then((m) => ({ Component: m.default })),
       },
       {
         path: "publications",
-        lazy: async () => {
-          const { ResearchLibrary: Component } =
-            await import("./components/FullLib.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/FullLib.jsx").then((m) => ({
+            Component: m.ResearchLibrary,
+          })),
       },
       {
         path: "about",
-        lazy: async () => {
-          const { default: Component } = await import("./components/About.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/About.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
       {
         path: "work",
-        lazy: async () => {
-          const { default: Component } = await import("./components/Work.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/Work.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
       {
         path: "blog",
-        lazy: async () => {
-          const { default: Component } = await import("./components/Blog.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/Blog.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
       {
         path: "blog/:slug",
-        lazy: async () => {
-          const { default: Component } =
-            await import("./components/ArticleDetails.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/ArticleDetails.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
       {
         path: "contact",
-        lazy: async () => {
-          const { default: Component } =
-            await import("./components/Contact.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/Contact.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
       {
         path: "*",
-        lazy: async () => {
-          const { default: Component } =
-            await import("./components/NotFound.jsx");
-          return { Component };
-        },
+        lazy: () =>
+          import("./components/NotFound.jsx").then((m) => ({
+            Component: m.default,
+          })),
       },
     ],
   },

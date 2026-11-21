@@ -1,18 +1,17 @@
-"use client"
-
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import LOGO from "../assets/logo.png"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import LOGO from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isLibraryDropdownOpen, setIsLibraryDropdownOpen] = useState(false)
-  const [isGetInvolvedDropdownOpen, setIsGetInvolvedDropdownOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLibraryDropdownOpen, setIsLibraryDropdownOpen] = useState(false);
+  const [isGetInvolvedDropdownOpen, setIsGetInvolvedDropdownOpen] =
+    useState(false);
 
   const handleMobileLinkClick = () => {
-    setIsMobileMenuOpen(false)
-  }
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <>
@@ -20,8 +19,13 @@ export default function Navbar() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 bg-white backdrop-blur-md border border-white/20 z-50 rounded-xl mt-4"
+        className="fixed top-0 left-0 right-0 bg-white backdrop-blur-md border border-white/20 z-50 rounded-b-xl mt-1"
       >
+        {/* Fades the gap above the nav from transparent (window edge) to white (nav) */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-full -left-px -right-px h-4 bg-gradient-to-b from-white/0 to-white"
+        />
         <div className="w-full md:w-[90vw] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo on the left */}
@@ -32,7 +36,11 @@ export default function Navbar() {
             >
               <Link to="/">
                 <span className="w-20">
-                  <img src={LOGO || "/placeholder.svg"} alt="Uzawi Logo" className="w-24" />
+                  <img
+                    src={LOGO || "/placeholder.svg"}
+                    alt="Uzawi Logo"
+                    className="w-24"
+                  />
                 </span>
               </Link>
             </motion.div>
@@ -114,7 +122,12 @@ export default function Navbar() {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
                 <AnimatePresence>
@@ -176,7 +189,12 @@ export default function Navbar() {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
                 <AnimatePresence>
@@ -242,7 +260,9 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.1 }}
                 >
-                  <div className="text-[#0F1662] text-sm font-medium mb-2">Library</div>
+                  <div className="text-[#0F1662] text-sm font-medium mb-2">
+                    Library
+                  </div>
                   <div className="pl-4 space-y-2">
                     <Link
                       to="/blog"
@@ -283,9 +303,10 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.2 }}
                 >
-                  <div className="text-[#0F1662] text-sm font-medium mb-2">Get Involved</div>
+                  <div className="text-[#0F1662] text-sm font-medium mb-2">
+                    Get Involved
+                  </div>
                   <div className="pl-4 space-y-2">
-                    
                     <Link
                       to="/donate"
                       onClick={handleMobileLinkClick}
@@ -308,7 +329,7 @@ export default function Navbar() {
         </div>
       </motion.nav>
     </>
-  )
+  );
 }
 
-export { Navbar }
+export { Navbar };

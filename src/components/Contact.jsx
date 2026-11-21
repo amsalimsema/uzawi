@@ -1,28 +1,22 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import {
-  FaEnvelope,
-  FaPhone,
-  FaMapMarkerAlt,
-  FaGithub,
-  FaBullseye,
-} from 'react-icons/fa';
-import { FaXTwitter, FaLinkedin, FaBluesky, FaYoutube} from 'react-icons/fa6';
-import { useState } from 'react';
+import { motion } from "framer-motion";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { FaXTwitter, FaLinkedin } from "react-icons/fa6";
+import { useState } from "react";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
 
   const handleChange = (e) => {
@@ -34,9 +28,9 @@ export default function Contact() {
 
   const scrollToForm = (e) => {
     e.preventDefault();
-    const formElement = document.getElementById('form');
+    const formElement = document.getElementById("form");
     if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      formElement.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -202,22 +196,6 @@ export default function Contact() {
                 >
                   <FaLinkedin className="w-5 h-5" />
                 </a>
-                <a
-                  href="https://github.com/uzawi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
-                >
-                  <FaBluesky className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://github.com/uzawi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
-                >
-                  <FaYoutube className="w-5 h-5" />
-                </a>
               </div>
             </div>
 
@@ -227,7 +205,7 @@ export default function Contact() {
                   <span className="text-[#00CAFF] text-xs ">i</span>
                 </div>
                 <p className="text-gray-700 text-sm">
-                  Alternatively send us a message{' '}
+                  Alternatively send us a message{" "}
                   <button
                     onClick={scrollToForm}
                     className="text-[#00CAFF] hover:underline font-medium cursor-pointer bg-transparent border-none p-0"

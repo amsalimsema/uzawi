@@ -1,50 +1,48 @@
-
-
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaXTwitter, FaLinkedin, FaBluesky, FaYoutube} from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
-import LOGO from '../assets/logo.png';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaXTwitter, FaLinkedin } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import emailjs from "@emailjs/browser";
+import LOGO from "../assets/logo.png";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const openNewsletterModal = () => {
     setIsNewsletterModalOpen(true);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const closeNewsletterModal = () => {
     setIsNewsletterModalOpen(false);
-    setEmail('');
-    setEmailError('');
+    setEmail("");
+    setEmailError("");
     setSubmitSuccess(false);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   const validateEmail = (email) => {
-    if (!email || email.trim() === '') {
-      return 'Email address is required';
+    if (!email || email.trim() === "") {
+      return "Email address is required";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return 'Please enter a valid email address';
+      return "Please enter a valid email address";
     }
 
     const domainRegex = /^[^\s@]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!domainRegex.test(email)) {
-      return 'Please enter a valid email domain';
+      return "Please enter a valid email domain";
     }
 
-    return '';
+    return "";
   };
 
   const handleNewsletterSubmit = async (e) => {
@@ -56,7 +54,7 @@ export default function Footer() {
       return;
     }
 
-    setEmailError('');
+    setEmailError("");
     setIsSubmitting(true);
 
     try {
@@ -65,21 +63,21 @@ export default function Footer() {
         import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         {
           to_email: email,
-          from_name: 'Uzawi Newsletter',
-          message: 'Thank you for subscribing to our newsletter!',
+          from_name: "Uzawi Newsletter",
+          message: "Thank you for subscribing to our newsletter!",
         },
-        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       );
 
       setSubmitSuccess(true);
-      setEmail('');
+      setEmail("");
 
       setTimeout(() => {
         closeNewsletterModal();
       }, 2000);
     } catch (error) {
-      setEmailError('Failed to subscribe. Please try again.');
-      console.error('EmailJS error:', error);
+      setEmailError("Failed to subscribe. Please try again.");
+      console.error("EmailJS error:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +98,7 @@ export default function Footer() {
               transition={{ duration: 0.5 }}
             >
               <img
-                src={LOGO || '/placeholder.svg'}
+                src={LOGO || "/placeholder.svg"}
                 alt="Uzawi Initiative Logo"
                 className="w-24 invert brightness-0"
               />
@@ -131,7 +129,7 @@ export default function Footer() {
                     Our Work
                   </Link>
                 </li>
-                
+
                 <li>
                   <Link
                     to="/contact"
@@ -204,22 +202,6 @@ export default function Footer() {
                 >
                   <FaLinkedin className="w-5 h-5" />
                 </a>
-                <a
-                  href="https://github.com/uzawi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
-                >
-                  <FaBluesky className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://github.com/uzawi"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-[#00CAFF] transition-colors duration-200"
-                >
-                  <FaYoutube className="w-5 h-5" />
-                </a>
               </div>
             </motion.div>
           </div>
@@ -263,7 +245,7 @@ export default function Footer() {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="fixed inset-0 z-[70] flex items-center justify-center p-4"
             >
               {/* Modal card */}
@@ -340,11 +322,11 @@ export default function Footer() {
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
-                          setEmailError('');
+                          setEmailError("");
                         }}
                         placeholder="your.email@example.com"
                         className={`w-full px-4 py-3 border ${
-                          emailError ? 'border-red-500' : 'border-gray-300'
+                          emailError ? "border-red-500" : "border-gray-300"
                         } rounded-sm focus:ring-2 focus:ring-[#00CAFF] focus:border-transparent outline-none transition-all`}
                       />
                       {emailError && (
@@ -359,7 +341,7 @@ export default function Footer() {
                       disabled={isSubmitting}
                       className="w-full bg-[#0F1662] text-white py-3 rounded-sm hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+                      {isSubmitting ? "Subscribing..." : "Subscribe"}
                     </button>
                   </form>
                 )}
